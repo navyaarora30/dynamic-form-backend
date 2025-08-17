@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import formRoutes from "./routes/formRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import airtableRoutes from "./routes/airtableRoutes.js"; 
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.get("/", (req, res) => {
 
 app.use("/api", formRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/airtable", airtableRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI, {
