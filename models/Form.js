@@ -39,6 +39,7 @@ const FormFieldSchema = new mongoose.Schema(
 const formSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
+    slug: { type: String, required: true, unique: true },
     owner: { type: String, required: true },
     fields: { type: [FormFieldSchema], default: [] },
     airtable: {

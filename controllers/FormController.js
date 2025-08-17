@@ -1,3 +1,4 @@
+import slugify from "slugify";
 import Form from "../models/Form.js";
 
 // Create a new form
@@ -9,8 +10,18 @@ export const createForm = async (req, res) => {
       return res.status(400).json({ message: "Missing or invalid form data" });
     }
 
+    // Generate slug from title
+    const slug = slugify(title, { lower: true, strict: true });
+
+    // Check for duplicate slug
+    const existing = await Form.findOne({ slug });
+    if (existing) {
+      return res.status(409).json({ message: "A form with this title already exists." });
+    }
+
     const newForm = new Form({
       title,
+      slug,
       owner,
       fields,
       airtable: {
