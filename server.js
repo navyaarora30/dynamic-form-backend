@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import formRoutes from "./routes/formRoutes.js";
+import authRoutes from "./routes/authRoutes.js"; 
 
 dotenv.config();
 
@@ -14,7 +15,8 @@ app.get("/", (req, res) => {
   res.send("Form Builder API is working");
 });
 
-app.use("/api", formRoutes);
+app.use("/api", formRoutes);         
+app.use("/api/auth", authRoutes);    
 
 mongoose
   .connect(process.env.MONGO_URI, {
