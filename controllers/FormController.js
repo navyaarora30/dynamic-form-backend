@@ -1,4 +1,5 @@
 import slugify from "slugify";
+import axios from "axios";
 import Form from "../models/Form.js";
 
 // Create a new form
@@ -33,6 +34,38 @@ export const createForm = async (req, res) => {
     });
 
     await newForm.save();
+
+    // Airtable Sync
+    const airtablePayload = {
+      fields: {
+        Title: title,
+        Owner: owner,
+        Slug: slug,
+        FieldCount: fields.length,
+        FieldLabels: fields.map(f => f.label).join(", "),
+        CreatedAt: new Date().toISOString()
+      }
+    };
+
+    const airtableBase = airtable?.baseId || process.env.AIRTABLE_BASE_ID;
+    const airtableTable = airtable?.tableName || process.env.AIRTABLE_TABLE_NAME;
+
+    try {
+      const airtableRes = await axios.post(
+        `https://api.airtable.com/v0/${airtableBase}/${airtableTable}`,
+        airtablePayload,
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.AIRTABLE_API_KEY}`,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+      console.log("Airtable sync successful:", airtableRes.data);
+    } catch (airtableErr) {
+      console.error("Airtable sync failed:", airtableErr.response?.data || airtableErr.message);
+    }
+
     res.status(201).json({ message: "Form created successfully", form: newForm });
   } catch (err) {
     console.error("Error creating form:", err);
