@@ -4,24 +4,15 @@ import {
   getForms,
   getFormById,
   updateForm,
-  deleteForm,
-} from "../controllers/FormController.js";
+  deleteForm
+} from "../controllers/formController.js";
 
 const router = express.Router();
 
-// Create route
-router.post("/", createForm);
-
-// Get all route
-router.get("/", getForms);
-
-// Get route
-router.get("/:id", getFormById);
-
-// Update route
-router.put("/:id", updateForm);
-
-// Delete route
-router.delete("/:id", deleteForm);
+router.post("/forms", createForm);
+router.get("/forms", getForms);
+router.get("/forms/:id", getFormById);
+router.put("/forms/:id", updateForm);
+router.delete("/forms/:id", deleteForm);
 
 export default router;

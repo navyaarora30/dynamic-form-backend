@@ -1,36 +1,32 @@
 import express from "express";
+import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import connectDB from "./config/database.js";
-
-import authRoutes from "./routes/authRoutes.js";
 import formRoutes from "./routes/formRoutes.js";
-import airtableRoutes from "./routes/airtableRoutes.js";
-import responseRoutes from "./routes/responseRoutes.js";
 
 dotenv.config();
-connectDB();
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/forms", formRoutes);
-app.use("/api/submissions", airtableRoutes);
-app.use("/api/responses", responseRoutes); 
-
 app.get("/", (req, res) => {
-  res.send("API is working");
+  res.send("Form Builder API is working");
 });
 
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: "Something went wrong!", error: err.message });
-});
+app.use("/api", formRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+mongoose
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    console.log("MongoDB connected");
+    app.listen(process.env.PORT || 4000, () => {
+      console.log(`Server running on port ${process.env.PORT || 4000}`);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err.message);
+  });

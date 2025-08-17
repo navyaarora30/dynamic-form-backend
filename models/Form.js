@@ -5,7 +5,7 @@ const supported_types = [
   "long_text",
   "single_select",
   "multi_select",
-  "attachment",
+  "attachment"
 ];
 
 const VisibilityRuleSchema = new mongoose.Schema(
@@ -14,9 +14,9 @@ const VisibilityRuleSchema = new mongoose.Schema(
     operator: {
       type: String,
       enum: ["equals", "not_equals", "includes", "not_includes", "one_of"],
-      default: "equals",
+      default: "equals"
     },
-    value: { type: mongoose.Schema.Types.Mixed, required: true },
+    value: { type: mongoose.Schema.Types.Mixed, required: true }
   },
   { _id: false }
 );
@@ -31,7 +31,7 @@ const FormFieldSchema = new mongoose.Schema(
     required: { type: Boolean, default: false },
     options: [String],
     showWhenOperator: { type: String, enum: ["all", "any"], default: "all" },
-    showWhen: [VisibilityRuleSchema],
+    showWhen: [VisibilityRuleSchema]
   },
   { _id: false }
 );
@@ -40,11 +40,11 @@ const formSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     owner: { type: String, required: true },
-    fields: { type: [FormFieldSchema], default: [] }, 
+    fields: { type: [FormFieldSchema], default: [] },
     airtable: {
-      tableName: { type: String, default: process.env.AIRTABLE_TABLE_NAME },
-      baseId: { type: String, default: process.env.AIRTABLE_BASE_ID },
-    },
+      tableName: { type: String },
+      baseId: { type: String }
+    }
   },
   { timestamps: true }
 );

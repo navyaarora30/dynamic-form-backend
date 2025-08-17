@@ -3,10 +3,9 @@ import Form from "../models/Form.js";
 // Create a new form
 export const createForm = async (req, res) => {
   try {
-    const { title, owner, fields } = req.body;
+    const { title, owner, fields, airtable, showWhenOperator, showWhen } = req.body;
 
-    // Validate required fields
-    if (!title || !owner || !fields || !Array.isArray(fields)) {
+    if (!title || !owner || !Array.isArray(fields)) {
       return res.status(400).json({ message: "Missing or invalid form data" });
     }
 
@@ -15,16 +14,18 @@ export const createForm = async (req, res) => {
       owner,
       fields,
       airtable: {
-        tableName: process.env.AIRTABLE_TABLE_NAME,
-        baseId: process.env.AIRTABLE_BASE_ID
-      }
+        tableName: airtable?.tableName || process.env.AIRTABLE_TABLE_NAME,
+        baseId: airtable?.baseId || process.env.AIRTABLE_BASE_ID
+      },
+      showWhenOperator,
+      showWhen
     });
 
     await newForm.save();
     res.status(201).json({ message: "Form created successfully", form: newForm });
   } catch (err) {
-    console.error("❌ Error creating form:", err.message);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error creating form:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
@@ -39,7 +40,7 @@ export const getForms = async (req, res) => {
 
     res.status(200).json(forms);
   } catch (err) {
-    console.error("❌ Error fetching forms:", err.message);
+    console.error("Error fetching forms:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -51,7 +52,7 @@ export const getFormById = async (req, res) => {
     if (!form) return res.status(404).json({ message: "Form not found" });
     res.status(200).json(form);
   } catch (err) {
-    console.error("❌ Error fetching form:", err.message);
+    console.error("Error fetching form:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -63,7 +64,7 @@ export const updateForm = async (req, res) => {
     if (!updatedForm) return res.status(404).json({ message: "Form not found" });
     res.status(200).json({ message: "Form updated successfully", form: updatedForm });
   } catch (err) {
-    console.error("❌ Error updating form:", err.message);
+    console.error("Error updating form:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -75,7 +76,7 @@ export const deleteForm = async (req, res) => {
     if (!deletedForm) return res.status(404).json({ message: "Form not found" });
     res.status(200).json({ message: "Form deleted successfully" });
   } catch (err) {
-    console.error("❌ Error deleting form:", err.message);
+    console.error("Error deleting form:", err.message);
     res.status(500).json({ message: "Server error" });
   }
 };
