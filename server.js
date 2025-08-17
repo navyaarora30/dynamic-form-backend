@@ -4,28 +4,30 @@ import dotenv from "dotenv";
 import cors from "cors";
 import formRoutes from "./routes/formRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
-import airtableRoutes from "./routes/airtableRoutes.js"; 
+import airtableRoutes from "./routes/airtableRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
 const allowedOrigins = [
-  "https://dynamic-form-frontend-rust.vercel.app",
-  "http://localhost:5173" // optional: for local dev
+  "https://dynamic-form-frontend-phi.vercel.app",
+  "http://localhost:5173", // optional: for local dev
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 
@@ -40,7 +42,7 @@ app.use("/api/airtable", airtableRoutes);
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   .then(() => {
     console.log("MongoDB connected");
