@@ -5,7 +5,7 @@ import {
   getFormById,
   updateForm,
   deleteForm
-} from "../controllers/formController.js";
+} from "../controllers/FormController.js";
 
 const router = express.Router();
 
