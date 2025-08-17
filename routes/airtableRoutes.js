@@ -3,8 +3,10 @@ import { createAirtableRecord, getAirtableRecords } from "../controllers/airtabl
 
 const router = express.Router();
 
+// POST: Create Airtable record
 router.post("/", createAirtableRecord);
 
+// GET: Fetch Airtable records by formId
 router.get("/:formId", getAirtableRecords);
 
 export default router;
